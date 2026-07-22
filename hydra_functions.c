@@ -115,11 +115,11 @@ VPLCD_Struct_t		VPLCD_Struct[MAX_VPCOUNT] =
 		},
 		{
 				.vp = CUPPING_SU,
-				.vp_callback = callback_vp_linfocup_set_release,
+				.vp_callback = callback_vp_linfocup_set_su,
 		},
 		{
 				.vp = CUPPING_RELEASE,
-				.vp_callback = callback_vp_linfocup_set_su,
+				.vp_callback = callback_vp_linfocup_set_release,
 		},
 		{
 				.vp = MOUSSE_VP,

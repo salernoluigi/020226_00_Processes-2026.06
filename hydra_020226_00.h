@@ -206,8 +206,7 @@ extern	HYDRA_Struct_t			HYDRA_Struct;
 extern	BOARD_Config_Struct_t	BOARD_Config;
 
 /* Global ports definition */
-#define	PUMP_PORT				AC_CMD0_GPIO_Port
-#define	PUMP_PIN				AC_CMD0_Pin
+
 
 
 

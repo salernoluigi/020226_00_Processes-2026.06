@@ -50,12 +50,13 @@ static uint32_t linfocup_timer_callback(uint32_t	val0,uint32_t	val1)
 	}
 	else
 	{
-		HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_SET);
-	}
-	if ( t_time_full_work >= t_time_full)
-	{
-		HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_RESET);
-		t_time_full_work=0;
+		if ( t_time_full_work >= t_time_full)
+		{
+			HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_RESET);
+			t_time_full_work=0;
+		}
+		else
+			HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_SET);
 	}
 	return 0;
 }
@@ -66,6 +67,8 @@ static uint32_t linfocup_timeout_callback(uint32_t	val0,uint32_t	val1)
 	HAL_GPIO_WritePin(LINFOCUP_PUMP_PORT, LINFOCUP_PUMP_PIN, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(LINFOCUP_EV2CAP_PORT, LINFOCUP_EV2CAP_PIN, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(LINFOCUP_PUMP_PORT, LINFOCUP_PUMP_PIN, GPIO_PIN_RESET);
+	HYDRA_Struct.global_timer_callback = NULL;
 
 	HYDRA_Struct.global_timer_status = GLOBAL_TIMER_STOP;
 	task_delay(50);
@@ -90,14 +93,15 @@ uint32_t	linfocup_set_intensity(uint16_t	data1_val)
 uint32_t	linfocup_set_release(uint16_t	data1_val)
 {
 	t_release = data1_val;
-	t_time_full = t_su + t_release;
+	t_time_full_work = t_time_full = t_su + t_release;
+
 	return 0;
 }
 
 uint32_t	linfocup_set_su(uint16_t	data1_val)
 {
 	t_su = data1_val;
-	t_time_full = t_su + t_release;
+	t_time_full_work = t_time_full = t_su + t_release;
 	return 0;
 }
 
@@ -118,6 +122,8 @@ uint32_t	linfocup_set_out(uint16_t	data1_val)
 		HYDRA_Struct.global_timer_elapsed_callback = linfocup_timeout_callback;
 		HYDRA_Struct.global_timer_callback = linfocup_timer_callback;
 		HYDRA_Struct.cleanup_function = linfocup_cleanup_function;
+		HAL_GPIO_WritePin(LINFOCUP_PUMP_PORT, LINFOCUP_PUMP_PIN, GPIO_PIN_SET);
+
 		t_time_full_work=0;
 		linfocup_run = 1;
 	}
@@ -126,11 +132,12 @@ uint32_t	linfocup_set_out(uint16_t	data1_val)
 		HAL_GPIO_WritePin(LINFOCUP_PUMP_PORT, LINFOCUP_PUMP_PIN, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(LINFOCUP_EV2CAP_PORT, LINFOCUP_EV2CAP_PIN, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(LINFOCUP_PUMP_PORT, LINFOCUP_PUMP_PIN, GPIO_PIN_RESET);
 		pwm_stop(&Pwm_TIM15_Control,TIM_CHANNEL_1);
 
 		HYDRA_Struct.global_timer_status = GLOBAL_TIMER_STOP;
 		global_timer_stop();
-		intensity=t_release=t_su=0;
+		//intensity=t_release=t_su=0;
 		set_gpio_mode(LINFOCUP_PROP_PORT,LINFOCUP_PROP_PIN,MODE_OUTPUT);
 		linfocup_run = 0;
 		//reset_time_values();

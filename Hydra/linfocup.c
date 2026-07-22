@@ -26,12 +26,37 @@
 #ifndef	SAMPLE_PROCESSES_ENABLED
 #include "linfocup.h"
 
+uint16_t	linfocup_run=0;
 uint16_t	intensity=0;
-uint16_t	t_release=0;
-uint16_t	t_su=0;
+uint16_t	t_release=1;
+uint16_t	t_su=1;
+uint16_t	t_time_full = 2;
+uint16_t	t_time_full_work = 2;
 
 uint32_t linfocup_init(void)
 {
+	return 0;
+}
+
+static uint32_t linfocup_timer_callback(uint32_t	val0,uint32_t	val1)
+{
+	if ( linfocup_run == 0 )
+		return 0;
+
+	t_time_full_work++;
+	if ( t_time_full_work < t_su)
+	{
+		HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_RESET);
+	}
+	else
+	{
+		HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_SET);
+	}
+	if ( t_time_full_work >= t_time_full)
+	{
+		HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_RESET);
+		t_time_full_work=0;
+	}
 	return 0;
 }
 
@@ -65,12 +90,14 @@ uint32_t	linfocup_set_intensity(uint16_t	data1_val)
 uint32_t	linfocup_set_release(uint16_t	data1_val)
 {
 	t_release = data1_val;
+	t_time_full = t_su + t_release;
 	return 0;
 }
 
 uint32_t	linfocup_set_su(uint16_t	data1_val)
 {
 	t_su = data1_val;
+	t_time_full = t_su + t_release;
 	return 0;
 }
 
@@ -78,10 +105,6 @@ uint32_t	linfocup_set_out(uint16_t	data1_val)
 {
 	if ( data1_val )
 	{
-		HAL_GPIO_WritePin(LINFOCUP_PUMP_PORT, LINFOCUP_PUMP_PIN, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(LINFOCUP_EV2CAP_PORT, LINFOCUP_EV2CAP_PIN, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_SET);
-
 		set_gpio_mode(LINFOCUP_PROP_PORT,LINFOCUP_PROP_PIN,MODE_AF);
 
 		if ( intensity == 0 )
@@ -93,7 +116,10 @@ uint32_t	linfocup_set_out(uint16_t	data1_val)
 		HYDRA_Struct.global_timer_status = GLOBAL_TIMER_RUNNING;
 		global_timer_run();
 		HYDRA_Struct.global_timer_elapsed_callback = linfocup_timeout_callback;
+		HYDRA_Struct.global_timer_callback = linfocup_timer_callback;
 		HYDRA_Struct.cleanup_function = linfocup_cleanup_function;
+		t_time_full_work=0;
+		linfocup_run = 1;
 	}
 	else
 	{
@@ -106,6 +132,8 @@ uint32_t	linfocup_set_out(uint16_t	data1_val)
 		global_timer_stop();
 		intensity=t_release=t_su=0;
 		set_gpio_mode(LINFOCUP_PROP_PORT,LINFOCUP_PROP_PIN,MODE_OUTPUT);
+		linfocup_run = 0;
+		//reset_time_values();
 	}
 	return 0;
 }

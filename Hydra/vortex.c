@@ -31,9 +31,6 @@ uint16_t	last_motor_speed=0;
 uint16_t	vortex_status=0;
 uint32_t	vortex_set_dose(uint16_t	data1_val)
 {
-	if ( vortex_status == 0 )
-		return 0;
-	last_stepper_speed = data1_val;
 	switch ( data1_val )
 	{
 	case 0:
@@ -41,17 +38,18 @@ uint32_t	vortex_set_dose(uint16_t	data1_val)
 		break;
 	case 1:
 		stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_MIN);
-		stepper_start(&Stepper_Control,TIM_CHANNEL_1,255,STEPPER_DIRECTION_FORWARD);
 		break;
 	case 2:
 		stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_MED);
-		stepper_start(&Stepper_Control,TIM_CHANNEL_1,255,STEPPER_DIRECTION_FORWARD);
 		break;
 	case 3:
 		stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_MAX);
-		stepper_start(&Stepper_Control,TIM_CHANNEL_1,255,STEPPER_DIRECTION_FORWARD);
 		break;
 	}
+	if (( last_stepper_speed == 0 ) && (vortex_status == 1 ))
+		stepper_start(&Stepper_Control,TIM_CHANNEL_1,0,STEPPER_DIRECTION_FORWARD);
+
+	last_stepper_speed = data1_val;
 	return 0;
 }
 
@@ -134,7 +132,7 @@ static uint32_t vortex_cleanup_function(uint32_t	val0,uint32_t	val1)
 	pwm_stop(&Pwm_TIM3_Control,TIM_CHANNEL_2);
 	last_motor_speed = 0;
 
-	if ( last_stepper_speed )
+	//if ( last_stepper_speed )
 	{
 		stepper_stop(&Stepper_Control,TIM_CHANNEL_1);
 		stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_RECOVERY);
@@ -165,20 +163,20 @@ uint32_t vortex_start(uint32_t level)
 		vortex_status = 1;
 		switch ( last_stepper_speed )
 		{
-		case 0:
-			stepper_stop(&Stepper_Control,TIM_CHANNEL_1);
-			break;
 		case 1:
 			stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_MIN);
-			stepper_start(&Stepper_Control,TIM_CHANNEL_1,255,STEPPER_DIRECTION_FORWARD);
+			stepper_start(&Stepper_Control,TIM_CHANNEL_1,0,STEPPER_DIRECTION_FORWARD);
 			break;
 		case 2:
 			stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_MED);
-			stepper_start(&Stepper_Control,TIM_CHANNEL_1,255,STEPPER_DIRECTION_FORWARD);
+			stepper_start(&Stepper_Control,TIM_CHANNEL_1,0,STEPPER_DIRECTION_FORWARD);
 			break;
 		case 3:
 			stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_MAX);
-			stepper_start(&Stepper_Control,TIM_CHANNEL_1,255,STEPPER_DIRECTION_FORWARD);
+			stepper_start(&Stepper_Control,TIM_CHANNEL_1,0,STEPPER_DIRECTION_FORWARD);
+			break;
+		default:
+			vortex_status = 0;
 			break;
 		}
 		set_gpio_mode(VORTEX_PROP_PORT,VORTEX_PROP_PIN,MODE_AF);
@@ -191,7 +189,7 @@ uint32_t vortex_start(uint32_t level)
 		HAL_GPIO_WritePin(VORTEX_EV3V_VACUUM_PORT, VORTEX_EV3V_VACUUM_PIN, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(VORTEX_EV3V_HYDRA_PORT, VORTEX_EV3V_HYDRA_PIN, GPIO_PIN_RESET);
 		HYDRA_Struct.global_timer_status = GLOBAL_TIMER_STOP;
-		if ( last_stepper_speed )
+		//if ( last_stepper_speed )
 		{
 			stepper_stop(&Stepper_Control,TIM_CHANNEL_1);
 			stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_RECOVERY);
@@ -203,7 +201,6 @@ uint32_t vortex_start(uint32_t level)
 		HAL_GPIO_WritePin(VORTEX_PROP_PORT, VORTEX_PROP_PIN, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(VORTEX_MOTORPWM_PORT, VORTEX_MOTORPWM_PIN, GPIO_PIN_RESET);
 		pwm_stop(&Pwm_TIM3_Control,TIM_CHANNEL_2);
-		last_motor_speed = 0;
 
 		vortex_status = 0;
 	}

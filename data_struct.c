@@ -268,7 +268,6 @@ void hydra_register_devices(void)
 	uart_register(&Uart8_BT_Drv);
 	sdcard_register(&SDCARD);
 	stepper_register(&Stepper_Control);
-	stepper_init(&Stepper_Control);
 	pwm_register(&Pwm_TIM1_Control);
 	pwm_register(&Pwm_TIM3_Control);
 	pwm_register(&Pwm_TIM4_Control);

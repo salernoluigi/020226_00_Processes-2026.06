@@ -74,8 +74,7 @@ uint32_t	count=0;
 		}
 		if (( wakeup & WAKEUP_FROM_SW_MODULES_IRQ) == WAKEUP_FROM_SW_MODULES_IRQ)
 		{
-			if ( Stepper_Control.stepper_direction == STEPPER_DIRECTION_FORWARD )
-				Stepper_Control.number_of_steps = 0x0fffffff;
+
 		}
 	}
 }

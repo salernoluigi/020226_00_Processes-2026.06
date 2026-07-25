@@ -137,10 +137,8 @@ uint32_t	linfocup_set_out(uint16_t	data1_val)
 
 		HYDRA_Struct.global_timer_status = GLOBAL_TIMER_STOP;
 		global_timer_stop();
-		//intensity=t_release=t_su=0;
 		set_gpio_mode(LINFOCUP_PROP_PORT,LINFOCUP_PROP_PIN,MODE_OUTPUT);
 		linfocup_run = 0;
-		//reset_time_values();
 	}
 	return 0;
 }

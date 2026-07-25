@@ -56,6 +56,17 @@ uint32_t	count=0;
 		{
 			process_led();
 			count++;
+			if (( count == 5 ) || ( count == 10 ))
+			{
+				if ( HYDRA_Struct.pump_status == 1 )
+				{
+					if ( HAL_GPIO_ReadPin(YF_S401_IN_GPIO_Port, YF_S401_IN_Pin) )
+						HAL_GPIO_WritePin(AC_CMD0_GPIO_Port, AC_CMD0_Pin, GPIO_PIN_RESET);
+					else
+						HAL_GPIO_WritePin(AC_CMD0_GPIO_Port, AC_CMD0_Pin, GPIO_PIN_SET);
+				}
+			}
+
 			if ( count >= 10 )
 			{
 				global_timer_run();

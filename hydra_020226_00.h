@@ -134,7 +134,9 @@ typedef struct
 	uint8_t 		jetpeel_program;
 	uint8_t 		jetpeel_time;
 	uint8_t 		jetpeel_enable;
+	uint8_t 		airpen_enable;
 	uint16_t		current_page;
+	uint8_t			pump_status;
 	uint8_t			flags;
 	uint16_t		adc_data[ADCVAL_SAMPLES];
 	uint16_t		press0;

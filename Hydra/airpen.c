@@ -40,6 +40,8 @@ static uint32_t airpen_timeout_callback(uint32_t	val0,uint32_t	val1)
 	send_numeric_dwin_packet(&Uart3_LCD_Drv,0x0682,AIRPEN_VP,0);
 	task_delay(50);
 	global_timer_stop();
+	HYDRA_Struct.airpen_enable = 0;
+	HYDRA_Struct.pump_status = 0;
 	return 0;
 }
 
@@ -62,6 +64,8 @@ uint32_t airpen_set_out(uint32_t level)
 		HAL_GPIO_WritePin(AIRPEN_EV_PORT, AIRPEN_EV_PIN, GPIO_PIN_SET);
 		HYDRA_Struct.global_timer_elapsed_callback = airpen_timeout_callback;
 		HYDRA_Struct.cleanup_function = airpen_cleanup_function;
+		HYDRA_Struct.airpen_enable = 1;
+		HYDRA_Struct.pump_status = 1;
 	}
 	else
 	{
@@ -71,6 +75,8 @@ uint32_t airpen_set_out(uint32_t level)
 		HAL_GPIO_WritePin(AIRPEN_EV3WARIA_PORT, AIRPEN_EV3WARIA_PIN, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(AIRPEN_EV_PORT, AIRPEN_EV_PIN, GPIO_PIN_RESET);
 		HYDRA_Struct.global_timer_elapsed_callback = NULL;
+		HYDRA_Struct.airpen_enable = 0;
+		HYDRA_Struct.pump_status = 0;
 	}
 	return 0;
 }

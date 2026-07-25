@@ -14,26 +14,16 @@
  * Project : A_os
 */
 /*
- * jetpeel.h
+ * hydrapen.c
  *
- *  Created on: Jul 21, 2026
+ *  Created on: Jul 25, 2026
  *      Author: MARFIX
  */
 
-#ifndef HYDRA_JETPEEL_H_
-#define HYDRA_JETPEEL_H_
+#include "main.h"
+#include "../A_os_includes.h"
+#include "../hydra_020226_00.h"
+#ifndef	SAMPLE_PROCESSES_ENABLED
+#include "hydrapen.h"
 
-#define	JETPEEL_PUMP_PORT		AC_CMD0_GPIO_Port
-#define	JETPEEL_PUMP_PIN		AC_CMD0_Pin
-
-#define	JETPEEL_EV_PORT			AUX2_OUT_NOPWM_GPIO_Port	/* J45 */
-#define	JETPEEL_EV_PIN			AUX2_OUT_NOPWM_Pin
-#define	JETPEEL_EV3WARIA_PORT	PIN_TIM1_CH4_GPIO_Port		/* J21 */
-#define	JETPEEL_EV3WARIA_PIN	PIN_TIM1_CH4_Pin
-
-extern	uint32_t jetpeel_init(void);
-extern	uint32_t jetpeel_set_out(uint32_t level);
-extern	uint32_t jetpeel_timer_call(void);
-extern	uint32_t jetpeel_set_program(uint32_t level);
-
-#endif /* HYDRA_JETPEEL_H_ */
+#endif //#ifndef	SAMPLE_PROCESSES_ENABLED

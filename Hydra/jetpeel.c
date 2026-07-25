@@ -42,6 +42,7 @@ static uint32_t jetpeel_timeout_callback(uint32_t	val0,uint32_t	val1)
 	send_numeric_dwin_packet(&Uart3_LCD_Drv,0x0682,AIRPEN_VP,0);
 	task_delay(50);
 	global_timer_stop();
+	HYDRA_Struct.pump_status = 0;
 	return 0;
 }
 
@@ -62,16 +63,18 @@ uint32_t jetpeel_set_out(uint32_t level)
 		HAL_GPIO_WritePin(JETPEEL_EV_PORT, JETPEEL_EV_PIN, GPIO_PIN_RESET);
 		HYDRA_Struct.global_timer_elapsed_callback = NULL;
 		HYDRA_Struct.jetpeel_enable = 0;
+		HYDRA_Struct.pump_status = 0;
 	}
 	else
 	{
-		HYDRA_Struct.jetpeel_enable = 1;
 		HYDRA_Struct.global_timer_status = GLOBAL_TIMER_RUNNING;
 		HYDRA_Struct.global_timer_elapsed_callback = jetpeel_timeout_callback;
 		HYDRA_Struct.cleanup_function = jetpeel_cleanup_function;
-
 		HAL_GPIO_WritePin(JETPEEL_PUMP_PORT, JETPEEL_PUMP_PIN, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(JETPEEL_EV3WARIA_PORT, JETPEEL_EV3WARIA_PIN, GPIO_PIN_SET);
+		HYDRA_Struct.jetpeel_enable = 1;
+		HYDRA_Struct.pump_status = 1;
+
 	}
 	return 0;
 }

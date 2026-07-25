@@ -54,6 +54,7 @@ static uint32_t linfocup_timer_callback(uint32_t	val0,uint32_t	val1)
 		{
 			HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_RESET);
 			t_time_full_work=0;
+
 		}
 		else
 			HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_SET);
@@ -75,6 +76,8 @@ static uint32_t linfocup_timeout_callback(uint32_t	val0,uint32_t	val1)
 	send_numeric_dwin_packet(&Uart3_LCD_Drv,0x0682,CUPPING_VP,0);
 	task_delay(50);
 	global_timer_stop();
+	HYDRA_Struct.pump_status = 0;
+
 	return 0;
 }
 
@@ -126,6 +129,7 @@ uint32_t	linfocup_set_out(uint16_t	data1_val)
 
 		t_time_full_work=0;
 		linfocup_run = 1;
+		HYDRA_Struct.pump_status = 1;
 	}
 	else
 	{
@@ -139,6 +143,8 @@ uint32_t	linfocup_set_out(uint16_t	data1_val)
 		global_timer_stop();
 		set_gpio_mode(LINFOCUP_PROP_PORT,LINFOCUP_PROP_PIN,MODE_OUTPUT);
 		linfocup_run = 0;
+		HYDRA_Struct.pump_status = 0;
+
 	}
 	return 0;
 }

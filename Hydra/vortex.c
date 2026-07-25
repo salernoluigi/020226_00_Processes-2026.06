@@ -148,6 +148,7 @@ static uint32_t vortex_cleanup_function(uint32_t	val0,uint32_t	val1)
 	task_delay(50);
 	send_numeric_dwin_packet(&Uart3_LCD_Drv,0x0682,VORTEX_SPEED_VP,0);
 	task_delay(50);
+	HYDRA_Struct.pump_status = 0;
 	return 0;
 }
 
@@ -181,6 +182,7 @@ uint32_t vortex_start(uint32_t level)
 		}
 		set_gpio_mode(VORTEX_PROP_PORT,VORTEX_PROP_PIN,MODE_AF);
 		set_gpio_mode(VORTEX_MOTORPWM_PORT,VORTEX_MOTORPWM_PIN,MODE_AF);
+		HYDRA_Struct.pump_status = 1;
 
 	}
 	else
@@ -203,6 +205,8 @@ uint32_t vortex_start(uint32_t level)
 		pwm_stop(&Pwm_TIM3_Control,TIM_CHANNEL_2);
 
 		vortex_status = 0;
+		HYDRA_Struct.pump_status = 0;
+
 	}
 	return 0;
 }

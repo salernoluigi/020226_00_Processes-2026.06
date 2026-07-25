@@ -25,6 +25,7 @@
 #ifndef	SAMPLE_PROCESSES_ENABLED
 
 #include "hydra_020226_00.h"
+#include "Hydra/common.h"
 
 LCDdata_Struct_t	IRED_LCD_Struct;
 
@@ -256,7 +257,9 @@ __weak	uint32_t	callback_vp_vortex_vacuum(uint16_t	data0_val,uint16_t	data1_val)
 }
 __weak	uint32_t	callback_vp_vortex_speed(uint16_t	data0_val,uint16_t	data1_val)
 {
-	return vortex_set_speed(data1_val);
+	if ( HYDRA_Struct.current_page == PAGE_VORTEX)
+		return vortex_set_speed(data1_val);
+	return 0;
 }
 __weak	uint32_t	callback_vp_au_page_switch(uint16_t	data0_val,uint16_t	data1_val)
 {

@@ -63,6 +63,7 @@
 #define VORTEX_DOSE_VP	  	0x5100
 #define VORTEX_VACUUM_VP  	0x5000	// proporzionale vacuum vortex
 #define VORTEX_SPEED_VP	  	0x5102	// pwm motore 12V
+#define PROP_PRUDUCT_VP	  	0x5103	// pwm motore 12V
 
 #define CUPPING_INTENSITY	0x5002
 #define CUPPING_SU  		0x5003

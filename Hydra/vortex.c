@@ -25,6 +25,7 @@
 #include "../hydra_020226_00.h"
 #ifndef	SAMPLE_PROCESSES_ENABLED
 #include "vortex.h"
+#include "common.h"
 
 uint16_t	last_stepper_speed=0;
 uint16_t	last_motor_speed=0;
@@ -75,7 +76,6 @@ uint32_t	vortex_set_vacuum(uint16_t	data1_val)
 	}
 	set_gpio_mode(VORTEX_PROP_PORT,VORTEX_PROP_PIN,MODE_AF);
 	pwm_start(&Pwm_TIM15_Control,TIM_CHANNEL_1);
-
 	return 0;
 }
 

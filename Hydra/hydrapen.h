@@ -31,5 +31,7 @@
 
 extern	uint32_t 	hydrapen_start(uint32_t level);
 extern	uint32_t	hydrapen_treatment_sel(uint16_t	data1_val);
+extern	uint32_t	hydrapen_set_vacuum(uint16_t	data1_val);
+extern	uint32_t	hydrapen_set_prod(uint16_t	data1_val);
 
 #endif /* HYDRA_HYDRAPEN_H_ */

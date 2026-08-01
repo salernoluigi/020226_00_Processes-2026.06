@@ -30,6 +30,8 @@
 LCDdata_Struct_t	IRED_LCD_Struct;
 
 extern	uint32_t	callback_vp_hydrapen(uint16_t	data0_val,uint16_t	data1_val);
+extern	uint32_t	callback_vp_hydrapen_vacuum(uint16_t	data0_val,uint16_t	data1_val);
+extern	uint32_t	callback_vp_hydrapen_product(uint16_t	data0_val,uint16_t	data1_val);
 extern	uint32_t	callback_vp_treatment_sel(uint16_t	data0_val,uint16_t	data1_val);
 extern	uint32_t	callback_vp_hotwater(uint16_t	data0_val,uint16_t	data1_val);
 extern	uint32_t	callback_vp_hydrogen(uint16_t	data0_val,uint16_t	data1_val);
@@ -60,6 +62,14 @@ VPLCD_Struct_t		VPLCD_Struct[MAX_VPCOUNT] =
 		{
 				.vp = HYDRAPEN_VP,
 				.vp_callback = callback_vp_hydrapen,
+		},
+		{
+				.vp = HYDRAPEN_VACUUM_VP,
+				.vp_callback = callback_vp_hydrapen_vacuum,
+		},
+		{
+				.vp = HYDRAPEN_PRODUCT_VP,
+				.vp_callback = callback_vp_hydrapen_product,
 		},
 		{
 				.vp = TREATMENT_SEL_VP,
@@ -164,6 +174,16 @@ VPLCD_Struct_t		VPLCD_Struct[MAX_VPCOUNT] =
 __weak	uint32_t	callback_vp_hydrapen(uint16_t	data0_val,uint16_t	data1_val)
 {
 	return hydrapen_start(data1_val);
+}
+
+__weak	uint32_t	callback_vp_hydrapen_vacuum(uint16_t	data0_val,uint16_t	data1_val)
+{
+	return hydrapen_set_vacuum(data1_val);
+}
+
+__weak	uint32_t	callback_vp_hydrapen_product(uint16_t	data0_val,uint16_t	data1_val)
+{
+	return hydrapen_set_prod(data1_val);
 }
 
 __weak	uint32_t	callback_vp_treatment_sel(uint16_t	data0_val,uint16_t	data1_val)

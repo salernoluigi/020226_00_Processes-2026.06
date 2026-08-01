@@ -64,6 +64,8 @@
 #define VORTEX_DOSE_VP	  	0x5100
 #define VORTEX_VACUUM_VP  	0x5000	// proporzionale vacuum vortex
 #define VORTEX_SPEED_VP	  	0x5102	// pwm motore 12V
+#define HYDRAPEN_VACUUM_VP  	0x1201 // proporzionale vacuum vortex
+#define HYDRAPEN_PRODUCT_VP  	0x1202 // proporzionale vacuum vortex
 
 //#define PROP_PRUDUCT_VP	  	0x5103	// pwm motore 12V
 

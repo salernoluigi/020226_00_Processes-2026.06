@@ -80,50 +80,34 @@ static uint32_t hydrapen_timeout_callback(uint32_t	val0,uint32_t	val1)
 
 uint32_t	hydrapen_set_vacuum(uint16_t	data1_val)
 {
+uint16_t pwm_unit = Pwm_TIM15_Control.period/10;
 	if ( hydrapen_status == 0 )
 		return 0;
-	switch(data1_val)
+
+	if ( data1_val < 10 )
 	{
-	case 0 :
-		pwm_stop(&Pwm_TIM15_Control,TIM_CHANNEL_1);
-		return 0;
-		break;
-	case 1 :
-		pwm_set_width(&Pwm_TIM15_Control,Pwm_TIM15_Control.period/3,TIM_CHANNEL_1);
-		break;
-	case 2 :
-		pwm_set_width(&Pwm_TIM15_Control,Pwm_TIM15_Control.period/2,TIM_CHANNEL_1);
-		break;
-	case 3 :
-		pwm_set_width(&Pwm_TIM15_Control,(Pwm_TIM15_Control.period/1)+10,TIM_CHANNEL_1);
-		break;
+		pwm_set_width(&Pwm_TIM15_Control,(9-data1_val)*pwm_unit,TIM_CHANNEL_1);
+		pwm_start(&Pwm_TIM15_Control,TIM_CHANNEL_1);
 	}
-	pwm_start(&Pwm_TIM15_Control,TIM_CHANNEL_1);
+	else
+		pwm_stop(&Pwm_TIM15_Control,TIM_CHANNEL_1);
 	return 0;
 }
 
 uint32_t	hydrapen_set_prod(uint16_t	data1_val)
 {
-	if ( hydrapen_status == 0 )
+uint16_t pwm_unit = Pwm_TIM15_Control.period/50;
+		if ( hydrapen_status == 0 )
+			return 0;
+
+		if ( data1_val )
+		{
+			pwm_set_width(&Pwm_TIM15_Control,(Pwm_TIM15_Control.period*8 + data1_val)*pwm_unit,TIM_CHANNEL_2);
+			pwm_start(&Pwm_TIM15_Control,TIM_CHANNEL_2);
+		}
+		else
+			pwm_stop(&Pwm_TIM15_Control,TIM_CHANNEL_2);
 		return 0;
-	switch(data1_val)
-	{
-	case 0 :
-		pwm_stop(&Pwm_TIM15_Control,TIM_CHANNEL_2);
-		return 0;
-		break;
-	case 1 :
-		pwm_set_width(&Pwm_TIM15_Control,Pwm_TIM15_Control.period/3,TIM_CHANNEL_2);
-		break;
-	case 2 :
-		pwm_set_width(&Pwm_TIM15_Control,Pwm_TIM15_Control.period/2,TIM_CHANNEL_2);
-		break;
-	case 3 :
-		pwm_set_width(&Pwm_TIM15_Control,(Pwm_TIM15_Control.period/1)+10,TIM_CHANNEL_2);
-		break;
-	}
-	set_gpio_mode(HYDRAPEN_PROP_PRODUCT_PORT,HYDRAPEN_PROP_PRODUCT_PIN,MODE_AF);
-	pwm_start(&Pwm_TIM15_Control,TIM_CHANNEL_2);return 0;
 }
 
 uint32_t	hydrapen_treatment_sel(uint16_t	data1_val)

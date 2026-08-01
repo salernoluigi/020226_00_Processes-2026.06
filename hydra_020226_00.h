@@ -137,6 +137,9 @@ typedef struct
 	uint8_t 		airpen_enable;
 	uint16_t		current_page;
 	uint8_t			pump_status;
+	uint8_t			hydrapen_running;
+	uint8_t			stepper_running;
+	uint16_t		stepper_running_timeout;
 	uint8_t			flags;
 	uint16_t		adc_data[ADCVAL_SAMPLES];
 	uint16_t		press0;
@@ -227,5 +230,6 @@ extern	void stepper_callback(uint32_t value);
 #include "Hydra/jetpeel.h"
 #include "Hydra/vortex.h"
 #include "Hydra/linfocup.h"
+#include "Hydra/hydrapen.h"
 
 #endif /* HYDRA_020226_00_H_ */

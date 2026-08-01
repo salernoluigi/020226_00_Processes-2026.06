@@ -163,12 +163,12 @@ VPLCD_Struct_t		VPLCD_Struct[MAX_VPCOUNT] =
 
 __weak	uint32_t	callback_vp_hydrapen(uint16_t	data0_val,uint16_t	data1_val)
 {
-	return 0;
+	return hydrapen_start(data1_val);
 }
 
 __weak	uint32_t	callback_vp_treatment_sel(uint16_t	data0_val,uint16_t	data1_val)
 {
-	return 0;
+	return hydrapen_treatment_sel(data1_val);
 }
 __weak	uint32_t	callback_vp_hotwater(uint16_t	data0_val,uint16_t	data1_val)
 {
@@ -267,13 +267,11 @@ __weak	uint32_t	callback_vp_au_page_switch(uint16_t	data0_val,uint16_t	data1_val
 	HYDRA_Struct.global_timer_status = GLOBAL_TIMER_STOP;
 	if ( HYDRA_Struct.cleanup_function != NULL )
 		HYDRA_Struct.cleanup_function(0,0);
-	HYDRA_Struct.current_page = data1_val;
 	HYDRA_Struct.cleanup_function = NULL;
+	HYDRA_Struct.current_page = data1_val;
 	global_timer_stop();
 	return 0;
 }
-
-
 
 /*
 * out vp

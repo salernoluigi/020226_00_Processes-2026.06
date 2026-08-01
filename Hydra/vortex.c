@@ -136,7 +136,7 @@ static uint32_t vortex_cleanup_function(uint32_t	val0,uint32_t	val1)
 	{
 		stepper_stop(&Stepper_Control,TIM_CHANNEL_1);
 		stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_RECOVERY);
-		stepper_start(&Stepper_Control,TIM_CHANNEL_1,50,STEPPER_DIRECTION_REVERSE);
+		stepper_start(&Stepper_Control,TIM_CHANNEL_1,VORTEX_STEPPER_BACK,STEPPER_DIRECTION_REVERSE);
 	}
 	last_stepper_speed = 0;
 	task_delay(50);
@@ -156,6 +156,12 @@ uint32_t vortex_start(uint32_t level)
 {
 	if ( level == 1 )
 	{
+		if ( HYDRA_Struct.stepper_running == 1 )
+		{
+			task_delay(50);
+			send_numeric_dwin_packet(&Uart3_LCD_Drv,0x0682,VORTEX_VP,0);
+			return 0;
+		}
 		HAL_GPIO_WritePin(VORTEX_PUMP_PORT, VORTEX_PUMP_PIN, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(VORTEX_EV3V_VACUUM_PORT, VORTEX_EV3V_VACUUM_PIN, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(VORTEX_EV3V_HYDRA_PORT, VORTEX_EV3V_HYDRA_PIN, GPIO_PIN_SET);
@@ -183,7 +189,8 @@ uint32_t vortex_start(uint32_t level)
 		set_gpio_mode(VORTEX_PROP_PORT,VORTEX_PROP_PIN,MODE_AF);
 		set_gpio_mode(VORTEX_MOTORPWM_PORT,VORTEX_MOTORPWM_PIN,MODE_AF);
 		HYDRA_Struct.pump_status = 1;
-
+		HYDRA_Struct.stepper_running = 1;
+		HYDRA_Struct.stepper_running_timeout = VORTEX_STEPPER_TOUT;
 	}
 	else
 	{

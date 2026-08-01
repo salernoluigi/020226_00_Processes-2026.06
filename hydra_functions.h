@@ -35,7 +35,8 @@
 #define PAGE_MOUSSE       9
 #define PAGE_DIAGNOSTIC   10
 
-#define HYDRAPEN_VP       0x1200	//
+#define HYDRAPEN_ALARM_VP 0x1000	// hydrapen
+#define HYDRAPEN_VP       0x1200	// hydrapen
 #define TREATMENT_SEL_VP  0x1300	// ozono trattamenti
 /*
  * data0_val = data1_val = l = prodotto
@@ -63,7 +64,8 @@
 #define VORTEX_DOSE_VP	  	0x5100
 #define VORTEX_VACUUM_VP  	0x5000	// proporzionale vacuum vortex
 #define VORTEX_SPEED_VP	  	0x5102	// pwm motore 12V
-#define PROP_PRUDUCT_VP	  	0x5103	// pwm motore 12V
+
+//#define PROP_PRUDUCT_VP	  	0x5103	// pwm motore 12V
 
 #define CUPPING_INTENSITY	0x5002
 #define CUPPING_SU  		0x5003

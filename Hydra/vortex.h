@@ -24,6 +24,10 @@
 #define	VORTEX_SPEED_MAX		VORTEX_SPEED_MIN/4			/* 1 Hz = 1 sec / rotation */
 #define	VORTEX_SPEED_RECOVERY	VORTEX_SPEED_MIN/8			/* 2 Hz = .5 sec / rotation */
 
+#define	VORTEX_STEPPER_BACK		50
+#define	VORTEX_STEPPER_TOUT		(VORTEX_STEPPER_BACK * 3)
+
+
 uint32_t	vortex_init(void);
 uint32_t	vortex_start(uint32_t level);
 uint32_t	vortex_set_dose(uint16_t	data1_val);

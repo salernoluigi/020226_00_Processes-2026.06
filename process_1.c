@@ -64,6 +64,26 @@ uint32_t	count=0;
 						HAL_GPIO_WritePin(AC_CMD0_GPIO_Port, AC_CMD0_Pin, GPIO_PIN_RESET);
 					else
 						HAL_GPIO_WritePin(AC_CMD0_GPIO_Port, AC_CMD0_Pin, GPIO_PIN_SET);
+					if ( HYDRA_Struct.hydrapen_running == 1 )
+					{
+						if ( HAL_GPIO_ReadPin(FLOATER_GPIO_Port, FLOATER_Pin) == 0 )
+						{
+							HAL_GPIO_WritePin(AC_CMD0_GPIO_Port, AC_CMD0_Pin, GPIO_PIN_RESET);
+							HYDRA_Struct.global_timer_status = GLOBAL_TIMER_STOP;
+							task_delay(50);
+							send_numeric_dwin_packet(&Uart3_LCD_Drv,0x0682,HYDRAPEN_ALARM_VP,0);
+						}
+						else
+						{
+							HAL_GPIO_WritePin(AC_CMD0_GPIO_Port, AC_CMD0_Pin, GPIO_PIN_SET);
+							if ( HYDRA_Struct.global_timer_status == GLOBAL_TIMER_STOP )
+							{
+								HYDRA_Struct.global_timer_status = GLOBAL_TIMER_RUNNING;
+								task_delay(50);
+								send_numeric_dwin_packet(&Uart3_LCD_Drv,0x0682,HYDRAPEN_ALARM_VP,1);
+							}
+						}
+					}
 				}
 			}
 
@@ -73,6 +93,18 @@ uint32_t	count=0;
 				count=0;
 			}
 			jetpeel_timer_call();
+			if ((HYDRA_Struct.stepper_running == 1) && (HYDRA_Struct.pump_status == 0))
+			{
+				if ( HYDRA_Struct.stepper_running_timeout )
+				{
+					HYDRA_Struct.stepper_running_timeout--;
+					if ( HYDRA_Struct.stepper_running_timeout == 0 )
+					{
+						stepper_stop(&Stepper_Control,TIM_CHANNEL_1);
+						HYDRA_Struct.stepper_running = 0;
+					}
+				}
+			}
 		}
 		if (( wakeup & WAKEUP_FROM_ADC1_IRQ) == WAKEUP_FROM_ADC1_IRQ)
 		{
@@ -85,7 +117,11 @@ uint32_t	count=0;
 		}
 		if (( wakeup & WAKEUP_FROM_SW_MODULES_IRQ) == WAKEUP_FROM_SW_MODULES_IRQ)
 		{
-
+			if ( (Stepper_Control.status & STEPPER_CHANNEL_STARTED) == 0)
+			{
+				HYDRA_Struct.stepper_running = 0;
+				HYDRA_Struct.stepper_running_timeout = 0;
+			}
 		}
 	}
 }

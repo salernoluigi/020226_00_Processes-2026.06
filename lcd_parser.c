@@ -31,7 +31,7 @@ uint16_t	vp;
 uint16_t	data0_val;
 uint16_t	data1_val;
 
-__weak uint32_t after_parser_function(UART_DriverStruct_t *uart_drv,uint16_t	vp,uint16_t	data1_val)
+__weak uint32_t after_parser_function(UART_DriverStruct_t *uart_drv,uint16_t	lvp,uint16_t	ldata1_val)
 {
 	return 0;
 }

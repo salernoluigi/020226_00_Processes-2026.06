@@ -62,6 +62,7 @@ uint32_t airpen_set_out(uint32_t level)
 		HAL_GPIO_WritePin(AIRPEN_PUMP_PORT, AIRPEN_PUMP_PIN, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(AIRPEN_EV3WARIA_PORT, AIRPEN_EV3WARIA_PIN, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(AIRPEN_EV_PORT, AIRPEN_EV_PIN, GPIO_PIN_SET);
+		set_gpio_mode(AIRPEN_PUMP24V_PORT,AIRPEN_PUMP24V_PIN,MODE_OUTPUT);
 		HYDRA_Struct.global_timer_elapsed_callback = airpen_timeout_callback;
 		HYDRA_Struct.cleanup_function = airpen_cleanup_function;
 		HYDRA_Struct.airpen_enable = 1;
@@ -74,7 +75,9 @@ uint32_t airpen_set_out(uint32_t level)
 		HAL_GPIO_WritePin(AIRPEN_PUMP_PORT, AIRPEN_PUMP_PIN, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(AIRPEN_EV3WARIA_PORT, AIRPEN_EV3WARIA_PIN, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(AIRPEN_EV_PORT, AIRPEN_EV_PIN, GPIO_PIN_RESET);
+		set_gpio_mode(AIRPEN_PUMP24V_PORT,AIRPEN_PUMP24V_PIN,MODE_AF);
 		HYDRA_Struct.global_timer_elapsed_callback = NULL;
+		HYDRA_Struct.cleanup_function = NULL;
 		HYDRA_Struct.airpen_enable = 0;
 		HYDRA_Struct.pump_status = 0;
 	}

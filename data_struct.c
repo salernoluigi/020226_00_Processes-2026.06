@@ -62,9 +62,11 @@ UART_DriverStruct_t Uart3_LCD_Drv =
 	.rx_max_len = UART3_RX_BUF_SIZE,
 	.uart = &huart3,
 	.wakeup_id = WAKEUP_FROM_UART3_IRQ,
-	.timeout = 100,
+	.timeout = 10,
 	//.flags = UART_USES_DMA_TX | UART_USES_DMA_RX | UART_WAKEUP_ON_RXFULL | UART_WAKEUP_ON_TIMEOUT,
-	.flags = UART_WAKEUP_ON_RXFULL | UART_WAKEUP_ON_TIMEOUT,
+	/* this was ok */
+	/* .flags = UART_WAKEUP_ON_RXFULL | UART_WAKEUP_ON_TIMEOUT, */
+	.flags = UART_USES_DMA_TX | UART_WAKEUP_ON_RXFULL | UART_WAKEUP_ON_TIMEOUT,
 };
 
 __ERAM_DATA_AREA	uint8_t	uart4_RS485_rx_buffer[UART4_RX_BUF_SIZE];

@@ -41,23 +41,27 @@ void lcdparse_error(void)
 {
 	lcd_error++;
 }
+uint8_t parser_buf[UART3_RX_BUF_SIZE];
 uint32_t lcd_parser(UART_DriverStruct_t *uart_drv)
 {
-uint32_t	i;
+uint32_t	i,idx_found;
 uint8_t 	*rx_buf = uart_drv->data;
 
-	for(i=0;i<UART3_RX_BUF_SIZE;i++)
+	for(i=0;i<uart_drv->rx_num_chars;i++)
+		parser_buf[i] = rx_buf[i];
+	for(i=0;i<uart_drv->rx_num_chars;i++)
 	{
-		if (( rx_buf[i] == 0x5a )  && ( rx_buf[i+1] == 0xa5 ))
+		if (( parser_buf[i] == 0x5a )  && ( parser_buf[i+1] == 0xa5 ))
 			break;
-		rx_buf++;
 		if ( i > 16 )
 		{
 			lcdparse_error();
 			return 1;
 		}
 	}
-	LCDdata_Struct_t	*rx_struct = (LCDdata_Struct_t *)rx_buf;
+	idx_found = i;
+
+	LCDdata_Struct_t	*rx_struct = (LCDdata_Struct_t *)&parser_buf[idx_found];
 
 	if (( rx_struct->flags[0] == 0x5a) && ( rx_struct->flags[1] == 0xa5))
 	{

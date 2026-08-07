@@ -132,7 +132,7 @@ uint32_t	count=0;
 			if ( uart_get_rxlen(&Uart3_LCD_Drv) > 2)
 				lcd_parser(&Uart3_LCD_Drv);
 		}
-		if (( wakeup & WAKEUP_FROM_UART7_IRQ) == WAKEUP_FROM_UART7_IRQ)
+		if (( wakeup & WAKEUP_FROM_EASY_UART_IRQ) == WAKEUP_FROM_EASY_UART_IRQ)
 		{
 			if (( flags & WAKEUP_FLAGS_UART_RX) == WAKEUP_FLAGS_UART_RX )
 				easy_uart++;

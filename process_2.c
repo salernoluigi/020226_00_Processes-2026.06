@@ -55,9 +55,6 @@ void process_2_init(uint32_t process_id)
 uint8_t		xmodem_rx_usb_enable;
 uint8_t		xmodem_rx_usb_enable_poll;
 uint8_t		tim_downscale=0;
-uint32_t	written = 0;
-uint32_t	initial = 0;
-uint32_t	i2c_reinit = 0;
 
 void process_2(uint32_t process_id)
 {
@@ -110,37 +107,6 @@ uint32_t	wakeup,flags;
 				}
 			}
 		}
-		/*
-		if (( wakeup & WAKEUP_FROM_I2C1_IRQ) == WAKEUP_FROM_I2C1_IRQ)
-		{
-			if (( HYDRA_Struct.flags |= HYDRA_I2CMEM_PRESENT ) == HYDRA_I2CMEM_PRESENT)
-			{
-				if (( flags & WAKEUP_FLAGS_I2C_RX) == WAKEUP_FLAGS_I2C_RX)
-				{
-					bzero((char *)i2c_tx_buffer,I2C_24XX_PAGESIZE);
-					sprintf((char *)i2c_tx_buffer,"Board Name : %s\n\rMachine Name : %s\n\rMachine Version : %s\n\rAos version : %s\n\rAPP version : %s",BOARD_NAME,MACHINE_NAME,MACHINE_VERSION,A_OS_VERSION,APP_VERSION);
-					if ( strcmp ((char *)i2c_rx_buffer,(char *)i2c_tx_buffer))
-					{
-						i2c_24xx_write(&i2c_24xx_Drv,EE_HEADER_ADDRESS,i2c_tx_buffer,I2C_24XX_PAGESIZE);
-						i2c_reinit = 1;
-					}
-					else
-						HYDRA_Struct.flags |= HYDRA_I2CMEM_CHECKED;
-				}
-				if (( flags & WAKEUP_FLAGS_I2C_TX) == WAKEUP_FLAGS_I2C_TX)
-				{
-					written++;
-					if ( i2c_reinit == 1 )
-					{
-						bzero((char *)i2c_tx_buffer,I2C_24XX_PAGESIZE);
-						i2c_24xx_write(&i2c_24xx_Drv,EE_COUNTERS_ADDRESS,i2c_tx_buffer,I2C_24XX_PAGESIZE);
-						i2c_reinit=0;
-						HYDRA_Struct.flags |= HYDRA_I2CMEM_CHECKED;
-					}
-				}
-			}
-		}
-		*/
 	}
 }
 

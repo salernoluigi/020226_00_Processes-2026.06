@@ -34,6 +34,9 @@ uint8_t	xmodem_area[XMODEM_AREA_LEN];
 uint8_t	usb_rx_buffer[XMODEM_LINE_LEN];
 uint8_t	usb_tx_buffer[XMODEM_LINE_LEN];
 
+uint8_t	i2c_tx_buffer[I2C_24XX_PAGESIZE];
+uint8_t	i2c_rx_buffer[I2C_24XX_PAGESIZE];
+
 USB_DriverStruct_t	USB_Drv =
 {
 		.data = usb_rx_buffer,
@@ -68,6 +71,7 @@ void process_2_init(uint32_t process_id)
 	if ( HAL_I2C_IsDeviceReady(i2c_24xx_Drv.bus,i2c_24xx_Drv.device_address,5,1000) == 0 )
 		HYDRA_Struct.flags |= HYDRA_I2CMEM_PRESENT;
 	usb_device_driver_register(&USB_Drv);
+	memset(i2c_rx_buffer,0x55,I2C_24XX_PAGESIZE);
 }
 
 uint8_t		xmodem_rx_usb_enable;
@@ -95,9 +99,7 @@ uint32_t	wakeup,flags;
 			if ( initial == 0 )
 			{
 				if (( HYDRA_Struct.flags |= HYDRA_I2CMEM_PRESENT ) == HYDRA_I2CMEM_PRESENT)
-					i2c_24xx_read(&i2c_24xx_Drv,EE_HEADER_ADDRESS,HYDRA_Struct.i2cBufr,I2C_24XX_PAGESIZE);
-
-				i2c_24xx_read(&i2c_24xx_Drv,EE_PROGRAM_ADDRESS,xmodem_area,4096);
+					i2c_24xx_read(&i2c_24xx_Drv,EE_HEADER_ADDRESS,i2c_rx_buffer,I2C_24XX_PAGESIZE);
 				initial ++;
 			}
 			if ( xmodem_rx_usb_enable == 1 )
@@ -141,10 +143,10 @@ uint32_t	wakeup,flags;
 			{
 				if (( flags & WAKEUP_FLAGS_I2C_RX) == WAKEUP_FLAGS_I2C_RX)
 				{
-					sprintf((char *)HYDRA_Struct.i2cBufw,"Board Name : %s\n\rMachine Name : %s\n\rMachine Version : %s\n\rAos version : %s",BOARD_NAME,MACHINE_NAME,MACHINE_VERSION,A_OS_VERSION);
-					if ( strcmp ((char *)HYDRA_Struct.i2cBufr,(char *)HYDRA_Struct.i2cBufw))
+					sprintf((char *)i2c_tx_buffer,"Board Name : %s\n\rMachine Name : %s\n\rMachine Version : %s\n\rAos version : %s",BOARD_NAME,MACHINE_NAME,MACHINE_VERSION,A_OS_VERSION);
+					if ( strcmp ((char *)i2c_rx_buffer,(char *)i2c_tx_buffer))
 					{
-						i2c_24xx_write(&i2c_24xx_Drv,EE_HEADER_ADDRESS,HYDRA_Struct.i2cBufw,I2C_24XX_PAGESIZE);
+						i2c_24xx_write(&i2c_24xx_Drv,EE_HEADER_ADDRESS,i2c_tx_buffer,I2C_24XX_PAGESIZE);
 					}
 				}
 				if (( flags & WAKEUP_FLAGS_I2C_TX) == WAKEUP_FLAGS_I2C_TX)

@@ -37,40 +37,37 @@ __weak uint32_t after_parser_function(UART_DriverStruct_t *uart_drv,uint16_t	lvp
 }
 
 uint8_t lcd_error = 0;
+uint8_t lcd_collision = 0;
 void lcdparse_error(void)
 {
 	lcd_error++;
 }
+
 uint8_t parser_buf[UART3_RX_BUF_SIZE];
 uint32_t lcd_parser(UART_DriverStruct_t *uart_drv)
 {
-uint32_t	i,idx_found;
+uint32_t	i;
 uint8_t 	*rx_buf = uart_drv->data;
 
+	bzero(parser_buf,UART3_RX_BUF_SIZE);
 	for(i=0;i<uart_drv->rx_num_chars;i++)
 		parser_buf[i] = rx_buf[i];
 	for(i=0;i<uart_drv->rx_num_chars;i++)
 	{
 		if (( parser_buf[i] == 0x5a )  && ( parser_buf[i+1] == 0xa5 ))
 			break;
-		if ( i > 16 )
-		{
-			lcdparse_error();
-			return 1;
-		}
 	}
-	idx_found = i;
-
-	LCDdata_Struct_t	*rx_struct = (LCDdata_Struct_t *)&parser_buf[idx_found];
-
-	if (( rx_struct->flags[0] == 0x5a) && ( rx_struct->flags[1] == 0xa5))
+	if ( i == uart_drv->rx_num_chars )
 	{
-		vp = rx_struct->vph<<8 | rx_struct->vpl;
-		data0_val = rx_struct->data0h <<8 | rx_struct->data0l;
-		data1_val = rx_struct->data1l;
-	}
-	else
+		lcdparse_error();
 		return 1;
+	}
+	LCDdata_Struct_t	*rx_struct = (LCDdata_Struct_t *)&parser_buf[i];
+
+	vp = rx_struct->vph<<8 | rx_struct->vpl;
+	data0_val = rx_struct->data0h <<8 | rx_struct->data0l;
+	data1_val = rx_struct->data1l;
+
 	after_parser_function(uart_drv,vp,data1_val);
 	for(i=0;i<MAX_VPCOUNT;i++)
 	{

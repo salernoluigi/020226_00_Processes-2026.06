@@ -132,12 +132,10 @@ static uint32_t vortex_cleanup_function(uint32_t	val0,uint32_t	val1)
 	pwm_stop(&Pwm_TIM3_Control,TIM_CHANNEL_2);
 	last_motor_speed = 0;
 
-	//if ( last_stepper_speed )
-	{
-		stepper_stop(&Stepper_Control,TIM_CHANNEL_1);
-		stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_RECOVERY);
-		stepper_start(&Stepper_Control,TIM_CHANNEL_1,VORTEX_STEPPER_BACK,STEPPER_DIRECTION_REVERSE);
-	}
+	stepper_stop(&Stepper_Control,TIM_CHANNEL_1);
+	stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_RECOVERY);
+	stepper_start(&Stepper_Control,TIM_CHANNEL_1,VORTEX_STEPPER_BACK,STEPPER_DIRECTION_REVERSE);
+
 	last_stepper_speed = 0;
 	task_delay(50);
 	send_numeric_dwin_packet(&Uart3_LCD_Drv,0x0682,VORTEX_VP,0);
@@ -198,12 +196,11 @@ uint32_t vortex_start(uint32_t level)
 		HAL_GPIO_WritePin(VORTEX_EV3V_VACUUM_PORT, VORTEX_EV3V_VACUUM_PIN, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(VORTEX_EV3V_HYDRA_PORT, VORTEX_EV3V_HYDRA_PIN, GPIO_PIN_RESET);
 		HYDRA_Struct.global_timer_status = GLOBAL_TIMER_STOP;
-		//if ( last_stepper_speed )
-		{
-			stepper_stop(&Stepper_Control,TIM_CHANNEL_1);
-			stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_RECOVERY);
-			stepper_start(&Stepper_Control,TIM_CHANNEL_1,50,STEPPER_DIRECTION_REVERSE);
-		}
+
+		stepper_stop(&Stepper_Control,TIM_CHANNEL_1);
+		stepper_set_prescaler(&Stepper_Control,VORTEX_SPEED_RECOVERY);
+		stepper_start(&Stepper_Control,TIM_CHANNEL_1,50,STEPPER_DIRECTION_REVERSE);
+
 		set_gpio_mode(VORTEX_PROP_PORT,VORTEX_PROP_PIN,MODE_OUTPUT);
 		set_gpio_mode(VORTEX_MOTORPWM_PORT,VORTEX_MOTORPWM_PIN,MODE_OUTPUT);
 

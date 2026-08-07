@@ -33,9 +33,13 @@ void stepper_callback(uint32_t value)
 void process_1_init(uint32_t process_id)
 {
 	hydra_register_devices();
+	bzero((char *)uart7_Easy_tx_buffer,UART7_RX_BUF_SIZE);
+	bzero((char *)uart7_Easy_rx_buffer,UART7_RX_BUF_SIZE);
 }
 
-uint8_t timbuf[32];
+uint8_t 	timbuf[32],easy_uart=0;
+uint32_t	easy_result=0;
+
 
 void process_1(uint32_t process_id)
 {
@@ -44,10 +48,10 @@ uint32_t	count=0;
 	create_timer(TIMER_ID_0,TIM_TICK,TIMERFLAGS_FOREVER | TIMERFLAGS_ENABLED);
 	adc_start(&ADC_Drv);
 	uart_start_receive(&Uart3_LCD_Drv);
+	uart_start_receive(&Uart7_Easy_Drv);
 	global_timer_init();
 	global_timer_stop();
 	HAL_GPIO_WritePin(SLEEP_3G_GPIO_Port, SLEEP_3G_Pin, GPIO_PIN_RESET);
-
 	while(1)
 	{
 		wait_event(EVENT_TIMER | EVENT_ADC1_IRQ | EVENT_UART3_IRQ | EVENT_SW_MODULES);
@@ -55,6 +59,9 @@ uint32_t	count=0;
 		if (( wakeup & WAKEUP_FROM_TIMER) == WAKEUP_FROM_TIMER)
 		{
 			process_led();
+			easy_result = easy_loop();
+			jetpeel_timer_call();
+
 			count++;
 			if (( count == 5 ) || ( count == 10 ))
 			{
@@ -92,7 +99,6 @@ uint32_t	count=0;
 				global_timer_run();
 				count=0;
 			}
-			jetpeel_timer_call();
 			if ((HYDRA_Struct.stepper_running == 1) && (HYDRA_Struct.pump_status == 0))
 			{
 				if ( HYDRA_Struct.stepper_running_timeout )
@@ -115,6 +121,12 @@ uint32_t	count=0;
 			if ( uart_get_rxlen(&Uart3_LCD_Drv) > 2)
 				lcd_parser(&Uart3_LCD_Drv);
 		}
+		if (( wakeup & WAKEUP_FROM_UART7_IRQ) == WAKEUP_FROM_UART7_IRQ)
+		{
+			if (( flags & WAKEUP_FLAGS_UART_RX) == WAKEUP_FLAGS_UART_RX )
+				easy_uart++;
+		}
+
 		if (( wakeup & WAKEUP_FROM_SW_MODULES_IRQ) == WAKEUP_FROM_SW_MODULES_IRQ)
 		{
 			if ( (Stepper_Control.status & STEPPER_CHANNEL_STARTED) == 0)

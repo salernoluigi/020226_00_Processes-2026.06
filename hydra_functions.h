@@ -24,57 +24,88 @@
 #ifndef HYDRA_FUNCTIONS_H_
 #define HYDRA_FUNCTIONS_H_
 
-#define PAGE_HOME         1
-#define PAGE_HYDRA        2
-#define PAGE_AIRPEN       3
-#define PAGE_WATERPEEL    4
-#define PAGE_IONOPEEL     5
-#define PAGE_COOLPEN      6
-#define PAGE_CUP          7
-#define PAGE_VORTEX       8
-#define PAGE_MOUSSE       9
-#define PAGE_DIAGNOSTIC   10
+#define PAGE_HOME         			1
+#define PAGE_HYDRA        			2
+#define PAGE_AIRPEN       			3
+#define PAGE_WATERPEEL    			4
+#define PAGE_IONOPEEL     			5
+#define PAGE_COOLPEN      			6
+#define PAGE_CUP          			7
+#define PAGE_VORTEX       			8
+#define PAGE_MOUSSE       			9
+#define PAGE_DIAGNOSTIC   			10
 
-#define HYDRAPEN_ALARM_VP 0x1000	// hydrapen
-#define HYDRAPEN_VP       0x1200	// hydrapen
-#define TREATMENT_SEL_VP  0x1300	// ozono trattamenti
+#define HYDRAPEN_VP       			0x1000	// hydrapen
+#define HYDRAPEN_VACUUM_VP 			0x1001	// proporzionale vacuum vortex
+#define HYDRAPEN_PRODUCT_VP			0x1002	// proporzionale vacuum vortex
+#define HYDRAPEN_TREATMENT_SEL_VP	0x1003	// ozono trattamenti
 /*
  * data0_val = data1_val = l = prodotto
  * data0_val = data1_val = 2 = ozono
  * data0_val = data1_val = 3 = acqua idrogenata , 9v on hydra
- *
  */
-#define HOTWATER_VP       	0x1400
-#define HYDROGEN_VP       	0x1500
-#define JETPEEL_VP        	0x1700
-#define JETPEEL_PRG_VP    	0x6100
-#define OZONE_VP          	0x1900
-#define PELTIER_1_VP      	0x2000	// manipolo crio 1
-#define PELTIER_2_VP      	0x2200	// manipolo crio 2
-#define AIRPEN_VP         	0x2400	//
-#define BIOLED_VP         	0x2500
-#define PRICKING_VP       	0x2600
-#define CUPPING_VP        	0x2700	//
-#define MOUSSE_VP         	0x2800	//
-#define IONOPEN_VP        	0x2900	//
-#define IONOPEN_CLEAN_VP  	0x3000
-#define TIMEFIELD_VP  	  	0x3100
-#define TIMESET_VP  	  	0x3200
-#define VORTEX_VP		  	0x3500
-#define VORTEX_DOSE_VP	  	0x5100
-#define VORTEX_VACUUM_VP  	0x5000	// proporzionale vacuum vortex
-#define VORTEX_SPEED_VP	  	0x5102	// pwm motore 12V
-#define HYDRAPEN_VACUUM_VP  	0x1201 // proporzionale vacuum vortex
-#define HYDRAPEN_PRODUCT_VP  	0x1202 // proporzionale vacuum vortex
+#define HYDRAPEN_ALARM_VP 			0x1004	// hydrapen alarm indicator
+#define HYDRAPEN_HOTWATER_VP		0x1005
+#define HYDRAPEN_HYDROGEN_VP       	0x1006
+#define HYDRAPEN_OZONE_VP          	0x1007
+#define HYDRAPEN_BIOLED_VP    		0x1008
+#define HYDRAPEN_PRICKING_VP		0x1009
 
-//#define PROP_PRUDUCT_VP	  	0x5103	// pwm motore 12V
+#define AIRPEN_VP         			0x1100	//
 
-#define CUPPING_INTENSITY	0x5002
-#define CUPPING_SU  		0x5003
-#define CUPPING_RELEASE  	0x5004
+#define JETPEEL_VP        	0x1200
+#define JETPEEL_PRG_VP    	0x1201
+/*
+ * data0_val = data1_val = l = prog1
+ * data0_val = data1_val = 2 = prog2
+ * data0_val = data1_val = 3 = prog3
+ */
+
+#define PELTIER_1_VP      	0x1300	// manipolo crio 1
+#define PELTIER_1_INCR_VP  	0x1301	// manipolo crio 1
+/*
+ * data0_val = data1_val = l = value
+ */
+#define PELTIER_2_VP      	0x1400	// manipolo crio 2
+#define PELTIER_2_INCR_VP  	0x1401	// manipolo crio 1
+/*
+ * data0_val = data1_val = l = value
+ */
+
+#define CUPPING_VP        	0x1500	//
+#define CUPPING_INTENSITY	0x1501
+/*
+ * data0_val = data1_val = l = value
+ */
+#define CUPPING_RELEASE  	0x1502
+/*
+ * data0_val = data1_val = l = value
+ */
+#define CUPPING_SU  		0x1503
+/*
+ * data0_val = data1_val = l = value
+ */
+
+#define VORTEX_VP		  	0x1600
+#define VORTEX_VACUUM_VP  	0x1601	// proporzionale vacuum vortex
+#define VORTEX_DOSE_VP	  	0x1602
+#define VORTEX_SPEED_VP	  	0x1603	// pwm motore 12V
+
+#define MOUSSE_VP         	0x1700	//
+
+#define IONOPEN_VP        			0x1800
+#define IONOPEN_RF_INTENSITY_VP		0x1801
+#define IONOPEN_EMS_INTENSITY_VP	0x1802
+#define IONOPEN_DOSE_VP				0x1803	// 12V pwm motor
+#define IONOPEN_SPEED_VP			0x1804	// 12V pwm motor
+#define IONOPEN_CLEAN_VP			0x1805
+
+
+
+#define TIMEFIELD_VP  	  	0x2000
+#define TIMESET_VP  	  	0x2001
 
 #define PAGE_SWITCH_VP    	0x8000
-
 
 #define	DWIN_STRING_LEN		32
 #define	DWIN_NUMERIC_LEN	10

@@ -92,8 +92,8 @@ extern	uint8_t	uart4_RS485_tx_buffer[UART4_TX_BUF_SIZE];
 extern	uint8_t	uart5_3G_rx_buffer[UART5_RX_BUF_SIZE];
 extern	uint8_t	uart5_3G_tx_buffer[UART5_TX_BUF_SIZE];
 
-#define	UART7_RX_BUF_SIZE	512
-#define	UART7_TX_BUF_SIZE	512
+#define	UART7_RX_BUF_SIZE	40
+#define	UART7_TX_BUF_SIZE	40
 #define	WAKEUP_FROM_EASY_UART_IRQ	WAKEUP_FROM_UART7_IRQ
 extern	uint8_t	uart7_Easy_rx_buffer[UART7_RX_BUF_SIZE];
 extern	uint8_t	uart7_Easy_tx_buffer[UART7_TX_BUF_SIZE];
@@ -207,13 +207,11 @@ typedef struct
 		TIM15_CH1_PWM| TIM15_CH2_PWM )
 #define	ALL_GPIO 0
 
+
+#define	__STDRAM_DATA_AREA	__attribute__ ((aligned (32)))
+
 extern	HYDRA_Struct_t			HYDRA_Struct;
 extern	BOARD_Config_Struct_t	BOARD_Config;
-
-/* Global ports definition */
-
-
-
 
 extern	void hydra_register_devices(void);
 extern	void stepper_callback(uint32_t value);
@@ -231,5 +229,7 @@ extern	void stepper_callback(uint32_t value);
 #include "Hydra/vortex.h"
 #include "Hydra/linfocup.h"
 #include "Hydra/hydrapen.h"
+
+#include "Easy_functions/easy_functions.h"
 
 #endif /* HYDRA_020226_00_H_ */

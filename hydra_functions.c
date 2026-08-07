@@ -72,16 +72,28 @@ VPLCD_Struct_t		VPLCD_Struct[MAX_VPCOUNT] =
 				.vp_callback = callback_vp_hydrapen_product,
 		},
 		{
-				.vp = TREATMENT_SEL_VP,
+				.vp = HYDRAPEN_TREATMENT_SEL_VP,
 				.vp_callback = callback_vp_treatment_sel,
 		},
 		{
-				.vp = HOTWATER_VP,
+				.vp = HYDRAPEN_HOTWATER_VP,
 				.vp_callback = callback_vp_hotwater,
 		},
 		{
-				.vp = HYDROGEN_VP,
+				.vp = HYDRAPEN_HYDROGEN_VP,
 				.vp_callback = callback_vp_hydrogen,
+		},
+		{
+				.vp = HYDRAPEN_OZONE_VP,
+				.vp_callback = callback_vp_ozone,
+		},
+		{
+				.vp = HYDRAPEN_BIOLED_VP,
+				.vp_callback = callback_vp_bioled,
+		},
+		{
+				.vp = HYDRAPEN_PRICKING_VP,
+				.vp_callback = callback_vp_pricking,
 		},
 		{
 				.vp = JETPEEL_VP,
@@ -90,10 +102,6 @@ VPLCD_Struct_t		VPLCD_Struct[MAX_VPCOUNT] =
 		{
 				.vp = JETPEEL_PRG_VP,
 				.vp_callback = callback_vp_jetpeel_program,
-		},
-		{
-				.vp = OZONE_VP,
-				.vp_callback = callback_vp_ozone,
 		},
 		{
 				.vp = PELTIER_1_VP,
@@ -108,18 +116,9 @@ VPLCD_Struct_t		VPLCD_Struct[MAX_VPCOUNT] =
 				.vp_callback = callback_vp_airpen,
 		},
 		{
-				.vp = BIOLED_VP,
-				.vp_callback = callback_vp_bioled,
-		},
-		{
-				.vp = PRICKING_VP,
-				.vp_callback = callback_vp_pricking,
-		},
-		{
 				.vp = CUPPING_VP,
 				.vp_callback = callback_vp_au_cupping,
 		},
-
 		{
 				.vp = CUPPING_INTENSITY,
 				.vp_callback = callback_vp_linfocup_set_intensity,
@@ -141,11 +140,6 @@ VPLCD_Struct_t		VPLCD_Struct[MAX_VPCOUNT] =
 				.vp_callback = callback_vp_au_ionopen,
 		},
 		{
-				.vp = TIMESET_VP,
-				.vp_callback = callback_vp_au_timeset,
-		},
-
-		{
 				.vp = IONOPEN_CLEAN_VP,
 				.vp_callback = callback_vp_au_ionopen_clean,
 		},
@@ -164,6 +158,10 @@ VPLCD_Struct_t		VPLCD_Struct[MAX_VPCOUNT] =
 		{
 				.vp = VORTEX_SPEED_VP,
 				.vp_callback = callback_vp_vortex_speed,
+		},
+		{
+				.vp = TIMESET_VP,
+				.vp_callback = callback_vp_au_timeset,
 		},
 		{
 				.vp = PAGE_SWITCH_VP,

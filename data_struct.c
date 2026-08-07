@@ -24,9 +24,10 @@
 #include "hydra_020226_00.h"
 
 #ifndef	SAMPLE_PROCESSES_ENABLED
+/*
 #define	__STDRAM_DATA_AREA	__attribute__ ((aligned (32)))
 #define	__ERAM_DATA_AREA	__attribute__((section(".d2ram"))) __attribute__ ((aligned (32)))
-
+*/
 /* ADC Data */
 __STDRAM_DATA_AREA	ADC_DriverStruct_t	ADC_Drv =
 {
@@ -39,8 +40,8 @@ __STDRAM_DATA_AREA	ADC_DriverStruct_t	ADC_Drv =
 };
 
 /* UART Data */
-__ERAM_DATA_AREA	uint8_t	uart2_Exp_rx_buffer[UART2_RX_BUF_SIZE];
-__ERAM_DATA_AREA	uint8_t	uart2_Exp_tx_buffer[UART2_TX_BUF_SIZE];
+__STDRAM_DATA_AREA	uint8_t	uart2_Exp_rx_buffer[UART2_RX_BUF_SIZE];
+__STDRAM_DATA_AREA	uint8_t	uart2_Exp_tx_buffer[UART2_TX_BUF_SIZE];
 
 __STDRAM_DATA_AREA	UART_DriverStruct_t Uart2_Exp_Drv =
 {
@@ -69,8 +70,8 @@ UART_DriverStruct_t Uart3_LCD_Drv =
 	.flags = UART_USES_DMA_TX | UART_WAKEUP_ON_RXFULL | UART_WAKEUP_ON_TIMEOUT,
 };
 
-__ERAM_DATA_AREA	uint8_t	uart4_RS485_rx_buffer[UART4_RX_BUF_SIZE];
-__ERAM_DATA_AREA	uint8_t	uart4_RS485_tx_buffer[UART4_TX_BUF_SIZE];
+__STDRAM_DATA_AREA	uint8_t	uart4_RS485_rx_buffer[UART4_RX_BUF_SIZE];
+__STDRAM_DATA_AREA	uint8_t	uart4_RS485_tx_buffer[UART4_TX_BUF_SIZE];
 
 __STDRAM_DATA_AREA	UART_DriverStruct_t Uart4_RS485_Drv =
 {
@@ -83,8 +84,8 @@ __STDRAM_DATA_AREA	UART_DriverStruct_t Uart4_RS485_Drv =
 	//.flags = UART_WAKEUP_ON_RXFULL | UART_WAKEUP_ON_TIMEOUT,
 };
 
-__ERAM_DATA_AREA	uint8_t	uart5_3G_rx_buffer[UART5_RX_BUF_SIZE];
-__ERAM_DATA_AREA	uint8_t	uart5_3G_tx_buffer[UART5_TX_BUF_SIZE];
+__STDRAM_DATA_AREA	uint8_t	uart5_3G_rx_buffer[UART5_RX_BUF_SIZE];
+__STDRAM_DATA_AREA	uint8_t	uart5_3G_tx_buffer[UART5_TX_BUF_SIZE];
 
 __STDRAM_DATA_AREA	UART_DriverStruct_t Uart5_3G_Drv =
 {
@@ -97,8 +98,8 @@ __STDRAM_DATA_AREA	UART_DriverStruct_t Uart5_3G_Drv =
 	//.flags = UART_WAKEUP_ON_RXFULL | UART_WAKEUP_ON_TIMEOUT,
 };
 
-__ERAM_DATA_AREA	uint8_t	uart7_Easy_rx_buffer[UART7_RX_BUF_SIZE];
-__ERAM_DATA_AREA	uint8_t	uart7_Easy_tx_buffer[UART7_TX_BUF_SIZE];
+uint8_t	uart7_Easy_rx_buffer[UART7_RX_BUF_SIZE];
+uint8_t	uart7_Easy_tx_buffer[UART7_TX_BUF_SIZE];
 
 __STDRAM_DATA_AREA	UART_DriverStruct_t Uart7_Easy_Drv =
 {
@@ -106,13 +107,15 @@ __STDRAM_DATA_AREA	UART_DriverStruct_t Uart7_Easy_Drv =
 	.rx_max_len = UART7_RX_BUF_SIZE,
 	.uart = &huart7,
 	.wakeup_id = WAKEUP_FROM_UART7_IRQ,
-	.timeout = 100,
-	.flags = UART_USES_DMA_TX | UART_USES_DMA_RX | UART_WAKEUP_ON_RXFULL | UART_WAKEUP_ON_TIMEOUT,
+	.timeout = 10,
+	//.flags = UART_USES_DMA_TX | UART_USES_DMA_RX | UART_WAKEUP_ON_RXFULL | UART_WAKEUP_ON_TIMEOUT,
 	//.flags = UART_WAKEUP_ON_RXFULL | UART_WAKEUP_ON_TIMEOUT,
+	.flags = UART_USES_DMA_TX | UART_WAKEUP_ON_RXFULL | UART_WAKEUP_ON_TIMEOUT,
+
 };
 
-__ERAM_DATA_AREA	uint8_t	uart8_BT_rx_buffer[UART8_RX_BUF_SIZE];
-__ERAM_DATA_AREA	uint8_t	uart8_BT_tx_buffer[UART8_TX_BUF_SIZE];
+__STDRAM_DATA_AREA	uint8_t	uart8_BT_rx_buffer[UART8_RX_BUF_SIZE];
+__STDRAM_DATA_AREA	uint8_t	uart8_BT_tx_buffer[UART8_TX_BUF_SIZE];
 
 __STDRAM_DATA_AREA	UART_DriverStruct_t Uart8_BT_Drv =
 {

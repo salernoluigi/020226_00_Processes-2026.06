@@ -68,7 +68,7 @@ uint32_t	wakeup,flags;
 
 	while(1)
 	{
-		wait_event(EVENT_TIMER | EVENT_USB_DEVICE_IRQ | EVENT_I2C1_IRQ);
+		wait_event(EVENT_TIMER | EVENT_USB_DEVICE_IRQ);
 		get_wakeup_flags(&wakeup,&flags);
 		if (( wakeup & WAKEUP_FROM_TIMER) == WAKEUP_FROM_TIMER)
 		{

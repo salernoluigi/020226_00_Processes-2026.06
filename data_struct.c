@@ -251,6 +251,26 @@ Stepper_Control_DriverStruct_t	Stepper_Control =
 		.wakeup_id = WAKEUP_FROM_SW_MODULES_IRQ,
 };
 
+#define	I2CMEM_BUFFERSIZE	I2C_24XX_PAGESIZE*4
+uint8_t	i2c_tx_buffer[I2C_24XX_PAGESIZE*2];
+uint8_t	i2c_rx_buffer[I2C_24XX_PAGESIZE*2];
+
+I2C_24xx_DriverStruct_t	i2c_24xx_Drv =
+{
+		.bus = &hi2c1,
+		.i2c_scl_port = MEM_I2C1_SCL_GPIO_Port,
+		.i2c_scl_bit = MEM_I2C1_SCL_Pin,
+		.read_buf  = HYDRA_Struct.i2cBufr,
+		.write_buf = HYDRA_Struct.i2cBufw,
+		.device_address = I2C_24XX_ADDRESS,
+		.device_address_size = I2C_MEMADD_SIZE_16BIT,
+		.device_size = 65536,
+		.flags = I2C_FLAGS_USES_READ_DMA | I2C_FLAGS_USES_WRITE_DMA | I2C_FLAGS_WAKEUP_ON_READ | I2C_FLAGS_WAKEUP_ON_WRITE | I2C_FLAGS_WAIT_ON_WRITE_COMPLETE | I2C_FLAGS_WAIT_ON_READ_COMPLETE,
+		//.flags = I2C_FLAGS_WAKEUP_ON_READ | I2C_FLAGS_WAKEUP_ON_WRITE,
+		.wakeup_id = WAKEUP_FROM_I2C1_IRQ,
+};
+
+
 __attribute__ ((aligned (32)))	HYDRA_Struct_t			HYDRA_Struct;
 __attribute__ ((aligned (32)))	BOARD_Config_Struct_t	BOARD_Config =
 {
@@ -285,13 +305,8 @@ void hydra_register_devices(void)
 	i2c_24xx_register(&i2c_24xx_Drv);
 	bzero(uart3_LCD_rx_buffer,UART3_RX_BUF_SIZE);
 	set_default_BOARD_Config();
-	/*
-	if ( HAL_I2C_IsDeviceReady(i2c_24xx_Drv.bus,i2c_24xx_Drv.device_address,5,1000) == 0 )
-	{
-		if ( read_BOARD_Config() == 0 )
-			config_pins_from_BOARD_Config();
-	}
-	*/
+	i2c_24xx_register(&i2c_24xx_Drv);
+
 	if ( BOARD_Config.neoled_num <= NUM_LEDS )
 		WS2812_Drv.ws2812_numleds = BOARD_Config.neoled_num;
 	ws2812_register(&WS2812_Drv);

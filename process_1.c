@@ -30,6 +30,16 @@ void stepper_callback(uint32_t value)
 	stepper_set_prescaler(&Stepper_Control,prescaler);
 }
 
+void get_i2c_data(void)
+{
+	bzero(HYDRA_Struct.i2cBufr,I2C_24XX_PAGESIZE);
+	if ( HAL_I2C_IsDeviceReady(i2c_24xx_Drv.bus,i2c_24xx_Drv.device_address,5,1000) == 0 )
+	{
+		HYDRA_Struct.flags |= HYDRA_I2CMEM_PRESENT;
+		i2c_24xx_read(&i2c_24xx_Drv,EE_HEADER_ADDRESS,i2c_rx_buffer,I2C_24XX_PAGESIZE);
+	}
+}
+
 void process_1_init(uint32_t process_id)
 {
 	hydra_register_devices();
@@ -52,9 +62,10 @@ uint32_t	count=0;
 	global_timer_init();
 	global_timer_stop();
 	HAL_GPIO_WritePin(SLEEP_3G_GPIO_Port, SLEEP_3G_Pin, GPIO_PIN_RESET);
+	get_i2c_data();
 	while(1)
 	{
-		wait_event(EVENT_TIMER | EVENT_ADC1_IRQ | EVENT_UART3_IRQ | EVENT_SW_MODULES);
+		wait_event(EVENT_TIMER | EVENT_ADC1_IRQ | EVENT_UART3_IRQ | EVENT_I2C1_IRQ | EVENT_SW_MODULES);
 		get_wakeup_flags(&wakeup,&flags);
 		if (( wakeup & WAKEUP_FROM_TIMER) == WAKEUP_FROM_TIMER)
 		{
@@ -133,6 +144,34 @@ uint32_t	count=0;
 			{
 				HYDRA_Struct.stepper_running = 0;
 				HYDRA_Struct.stepper_running_timeout = 0;
+			}
+		}
+		if (( wakeup & WAKEUP_FROM_I2C1_IRQ) == WAKEUP_FROM_I2C1_IRQ)
+		{
+			if (( HYDRA_Struct.flags |= HYDRA_I2CMEM_PRESENT ) == HYDRA_I2CMEM_PRESENT)
+			{
+				if (( flags & WAKEUP_FLAGS_I2C_RX) == WAKEUP_FLAGS_I2C_RX)
+				{
+					bzero((char *)i2c_tx_buffer,I2C_24XX_PAGESIZE);
+					sprintf((char *)i2c_tx_buffer,"Hydra Board Name : %s\n\rMachine Name : %s\n\rMachine Version : %s\n\rAos version : %s\n\rAPP version : %s",BOARD_NAME,MACHINE_NAME,MACHINE_VERSION,A_OS_VERSION,APP_VERSION);
+					if ( strcmp ((char *)i2c_rx_buffer,(char *)i2c_tx_buffer))
+					{
+						i2c_24xx_write(&i2c_24xx_Drv,EE_HEADER_ADDRESS,i2c_tx_buffer,I2C_24XX_PAGESIZE);
+						HYDRA_Struct.flags |= HYDRA_I2CMEM_REINIT;
+					}
+					else
+						HYDRA_Struct.flags |= HYDRA_I2CMEM_CHECKED;
+				}
+				if (( flags & WAKEUP_FLAGS_I2C_TX) == WAKEUP_FLAGS_I2C_TX)
+				{
+					if (( flags & HYDRA_I2CMEM_REINIT) == HYDRA_I2CMEM_REINIT)
+					{
+						bzero((char *)i2c_tx_buffer,I2C_24XX_PAGESIZE);
+						i2c_24xx_write(&i2c_24xx_Drv,EE_COUNTERS_ADDRESS,i2c_tx_buffer,I2C_24XX_PAGESIZE);
+						HYDRA_Struct.flags &=  ~HYDRA_I2CMEM_REINIT;
+						HYDRA_Struct.flags |= HYDRA_I2CMEM_CHECKED;
+					}
+				}
 			}
 		}
 	}

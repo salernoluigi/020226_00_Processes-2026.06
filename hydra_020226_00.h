@@ -23,6 +23,8 @@
 #ifndef HYDRA_020226_00_H_
 #define HYDRA_020226_00_H_
 
+#define	APP_VERSION				"07082026_00"
+
 extern	ADC_HandleTypeDef hadc1;
 
 extern	I2C_HandleTypeDef hi2c1;
@@ -153,9 +155,12 @@ typedef struct
 }HYDRA_Struct_t;
 /* flags */
 #define	HYDRA_I2CMEM_PRESENT			0x01
+#define	HYDRA_I2CMEM_CHECKED			0x02
+#define	HYDRA_I2CMEM_REINIT				0x04
 
 #define	EE_HEADER_ADDRESS		0
-#define	EE_PROGRAM_ADDRESS		0x100
+#define	EE_COUNTERS_ADDRESS		0x100
+#define	EE_PROGRAM_ADDRESS		0x200
 
 #define	HYDRA_NAME_LEN			32
 #define	HYDRA_VERSION_LEN		32
@@ -213,6 +218,9 @@ typedef struct
 extern	HYDRA_Struct_t			HYDRA_Struct;
 extern	BOARD_Config_Struct_t	BOARD_Config;
 
+extern	uint8_t	i2c_tx_buffer[I2C_24XX_PAGESIZE*2];
+extern	uint8_t	i2c_rx_buffer[I2C_24XX_PAGESIZE*2];
+
 extern	void hydra_register_devices(void);
 extern	void stepper_callback(uint32_t value);
 
@@ -229,6 +237,7 @@ extern	void stepper_callback(uint32_t value);
 #include "Hydra/vortex.h"
 #include "Hydra/linfocup.h"
 #include "Hydra/hydrapen.h"
+#include "Hydra/counters.h"
 
 #include "Easy_functions/easy_functions.h"
 

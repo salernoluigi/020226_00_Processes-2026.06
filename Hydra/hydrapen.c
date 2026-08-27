@@ -23,7 +23,9 @@
 #include "main.h"
 #include "../A_os_includes.h"
 #include "../hydra_020226_00.h"
+
 #ifndef	SAMPLE_PROCESSES_ENABLED
+
 #include "hydrapen.h"
 
 uint16_t	hydrapen_status=0;
@@ -43,7 +45,6 @@ static void hydrapen_reset_ports(void)
 	HAL_GPIO_WritePin(HYDRAPEN_BOTTLE_C_PORT, HYDRAPEN_BOTTLE_C_PIN, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(HYDRAPEN_BOTTLE_H2O_PORT, HYDRAPEN_BOTTLE_H2O_PIN, GPIO_PIN_RESET);
 }
-
 
 static uint32_t hydrapen_cleanup_function(uint32_t	val0,uint32_t	val1)
 {
@@ -78,15 +79,31 @@ static uint32_t hydrapen_timeout_callback(uint32_t	val0,uint32_t	val1)
 	return 	0;
 }
 
+uint16_t hydrapen_vacuum_table[] =
+{
+		700,
+		650,
+		625,
+		610,
+		605,
+		600,
+		590,
+		570,
+		560,
+		300,
+		300,
+};
+
 uint32_t	hydrapen_set_vacuum(uint16_t	data1_val)
 {
-uint16_t pwm_unit = Pwm_TIM15_Control.period/10;
+uint16_t  pwm_val = 0;
 	if ( hydrapen_status == 0 )
 		return 0;
 
-	if ( data1_val < 10 )
+	if ( data1_val  < 10 )
 	{
-		pwm_set_width(&Pwm_TIM15_Control,(9-data1_val)*pwm_unit,TIM_CHANNEL_1);
+		pwm_val = hydrapen_vacuum_table[data1_val];
+		pwm_set_width(&Pwm_TIM15_Control,pwm_val,TIM_CHANNEL_1);
 		pwm_start(&Pwm_TIM15_Control,TIM_CHANNEL_1);
 	}
 	else
@@ -94,20 +111,35 @@ uint16_t pwm_unit = Pwm_TIM15_Control.period/10;
 	return 0;
 }
 
+uint16_t hydrapen_product_table[] =
+{
+		700,
+		600,
+		610,
+		620,
+		630,
+		640,
+		650,
+		660,
+		670,
+		680,
+		690,
+};
+
 uint32_t	hydrapen_set_prod(uint16_t	data1_val)
 {
-uint16_t pwm_unit = Pwm_TIM15_Control.period/50;
-		if ( hydrapen_status == 0 )
-			return 0;
-
-		if ( data1_val )
-		{
-			pwm_set_width(&Pwm_TIM15_Control,(Pwm_TIM15_Control.period*8 + data1_val)*pwm_unit,TIM_CHANNEL_2);
-			pwm_start(&Pwm_TIM15_Control,TIM_CHANNEL_2);
-		}
-		else
-			pwm_stop(&Pwm_TIM15_Control,TIM_CHANNEL_2);
+uint16_t  pwm_val = 0;
+	if ( hydrapen_status == 0 )
 		return 0;
+	if ( data1_val )
+	{
+		pwm_val = hydrapen_product_table[data1_val];
+		pwm_set_width(&Pwm_TIM15_Control,pwm_val,TIM_CHANNEL_2);
+		pwm_start(&Pwm_TIM15_Control,TIM_CHANNEL_2);
+	}
+	else
+		pwm_stop(&Pwm_TIM15_Control,TIM_CHANNEL_2);
+	return 0;
 }
 
 uint32_t	hydrapen_treatment_sel(uint16_t	data1_val)
@@ -170,6 +202,8 @@ uint32_t hydrapen_start(uint32_t level)
 
 		HYDRA_Struct.pump_status = 1;
 		HYDRA_Struct.hydrapen_running = 1;
+		hydrapen_set_vacuum(0);
+		hydrapen_set_prod(0);
 	}
 	else
 	{
@@ -181,7 +215,10 @@ uint32_t hydrapen_start(uint32_t level)
 		hydrapen_cleanup_function(0,0);
 		HYDRA_Struct.pump_status = 0;
 		HYDRA_Struct.hydrapen_running = 0;
+		hydrapen_set_vacuum(0);
+		hydrapen_set_prod(0);
 	}
 	return 0;
 }
+
 #endif //#ifndef	SAMPLE_PROCESSES_ENABLED

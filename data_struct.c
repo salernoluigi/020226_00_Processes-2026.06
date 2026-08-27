@@ -227,7 +227,8 @@ __STDRAM_DATA_AREA	Pwm_Control_DriverStruct_t	Pwm_TIM5_Control =
 __STDRAM_DATA_AREA	Pwm_Control_DriverStruct_t	Pwm_TIM15_Control =
 {
 		.timer = &htim15,
-		.period = 1250,
+		//.period = 1666/2,
+		.period = 700,
 		.pulse_width = {PWM_DEFAULT_PW,PWM_DEFAULT_PW,PWM_DEFAULT_PW,PWM_DEFAULT_PW,},
 };
 

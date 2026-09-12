@@ -36,6 +36,8 @@ static uint32_t jetpeel_timeout_callback(uint32_t	val0,uint32_t	val1)
 	HAL_GPIO_WritePin(JETPEEL_PUMP_PORT, JETPEEL_PUMP_PIN, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(JETPEEL_EV3WARIA_PORT, JETPEEL_EV3WARIA_PIN, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(JETPEEL_EV_PORT, JETPEEL_EV_PIN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(JETPEEL_PUMP24V_PORT, JETPEEL_PUMP24V_PIN, GPIO_PIN_RESET);
+
 	HYDRA_Struct.jetpeel_enable = 0;
 	HYDRA_Struct.global_timer_status = GLOBAL_TIMER_STOP;
 	task_delay(50);
@@ -59,6 +61,7 @@ uint32_t jetpeel_set_out(uint32_t level)
 		HYDRA_Struct.global_timer_status = GLOBAL_TIMER_STOP;
 		global_timer_stop();
 		HAL_GPIO_WritePin(JETPEEL_PUMP_PORT, JETPEEL_PUMP_PIN, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(JETPEEL_PUMP24V_PORT, JETPEEL_PUMP24V_PIN, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(JETPEEL_EV3WARIA_PORT, JETPEEL_EV3WARIA_PIN, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(JETPEEL_EV_PORT, JETPEEL_EV_PIN, GPIO_PIN_RESET);
 		HYDRA_Struct.global_timer_elapsed_callback = NULL;
@@ -71,7 +74,9 @@ uint32_t jetpeel_set_out(uint32_t level)
 		HYDRA_Struct.global_timer_elapsed_callback = jetpeel_timeout_callback;
 		HYDRA_Struct.cleanup_function = jetpeel_cleanup_function;
 		HAL_GPIO_WritePin(JETPEEL_PUMP_PORT, JETPEEL_PUMP_PIN, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(JETPEEL_PUMP24V_PORT, JETPEEL_PUMP24V_PIN, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(JETPEEL_EV3WARIA_PORT, JETPEEL_EV3WARIA_PIN, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(JETPEEL_EV_PORT, JETPEEL_EV_PIN, GPIO_PIN_SET);
 		HYDRA_Struct.jetpeel_enable = 1;
 		HYDRA_Struct.pump_status = 1;
 

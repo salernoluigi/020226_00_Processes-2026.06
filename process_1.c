@@ -79,9 +79,15 @@ uint32_t	count=0;
 				if ( HYDRA_Struct.pump_status == 1 )
 				{
 					if ( HAL_GPIO_ReadPin(YF_S401_IN_GPIO_Port, YF_S401_IN_Pin) )
+					{
 						HAL_GPIO_WritePin(AC_CMD0_GPIO_Port, AC_CMD0_Pin, GPIO_PIN_RESET);
+						HAL_GPIO_WritePin(PIN_TIM1_CH2_GPIO_Port, PIN_TIM1_CH2_Pin, GPIO_PIN_RESET);
+					}
 					else
+					{
 						HAL_GPIO_WritePin(AC_CMD0_GPIO_Port, AC_CMD0_Pin, GPIO_PIN_SET);
+						HAL_GPIO_WritePin(PIN_TIM1_CH2_GPIO_Port, PIN_TIM1_CH2_Pin, GPIO_PIN_SET);
+					}
 					if ( HYDRA_Struct.hydrapen_running == 1 )
 					{
 						if ( HAL_GPIO_ReadPin(FLOATER_GPIO_Port, FLOATER_Pin) == 0 )

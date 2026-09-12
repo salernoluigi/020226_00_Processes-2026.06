@@ -126,6 +126,7 @@ uint32_t	linfocup_set_out(uint16_t	data1_val)
 		HYDRA_Struct.global_timer_callback = linfocup_timer_callback;
 		HYDRA_Struct.cleanup_function = linfocup_cleanup_function;
 		HAL_GPIO_WritePin(LINFOCUP_PUMP_PORT, LINFOCUP_PUMP_PIN, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(LINFOCUP_PUMP24V_PORT, LINFOCUP_PUMP24V_PIN, GPIO_PIN_SET);
 
 		t_time_full_work=0;
 		linfocup_run = 1;
@@ -137,6 +138,7 @@ uint32_t	linfocup_set_out(uint16_t	data1_val)
 		HAL_GPIO_WritePin(LINFOCUP_EV2CAP_PORT, LINFOCUP_EV2CAP_PIN, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(LINFOCUP_EV3WARIA_PORT, LINFOCUP_EV3WARIA_PIN, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(LINFOCUP_PUMP_PORT, LINFOCUP_PUMP_PIN, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(LINFOCUP_PUMP24V_PORT, LINFOCUP_PUMP24V_PIN, GPIO_PIN_RESET);
 		pwm_stop(&Pwm_TIM15_Control,TIM_CHANNEL_1);
 
 		HYDRA_Struct.global_timer_status = GLOBAL_TIMER_STOP;

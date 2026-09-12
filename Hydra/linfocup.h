@@ -31,6 +31,8 @@
 #define	LINFOCUP_EV2CAP_PIN		PIN_TIM3_CH3_Pin
 #define	LINFOCUP_PROP_PORT		AUX3_TIM15_CH1_GPIO_Port	/* J34 PWM prop vacuum */
 #define	LINFOCUP_PROP_PIN		AUX3_TIM15_CH1_Pin
+#define	LINFOCUP_PUMP24V_PORT	PIN_TIM1_CH2_GPIO_Port		/* J19 pompa supplementare 24V*/
+#define	LINFOCUP_PUMP24V_PIN	PIN_TIM1_CH2_Pin
 
 extern	uint32_t 	linfocup_init(void);
 extern	uint32_t	linfocup_set_out(uint16_t	data1_val);

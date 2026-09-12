@@ -88,7 +88,7 @@
 
 #define VORTEX_VP		  	0x1600
 #define VORTEX_VACUUM_VP  	0x1601	// proporzionale vacuum vortex
-#define VORTEX_DOSE_VP	  	0x1602
+#define VORTEX_DOSE_VP	  	0x1602	// stepper dose
 #define VORTEX_SPEED_VP	  	0x1603	// pwm motore 12V
 
 #define MOUSSE_VP         	0x1700	//

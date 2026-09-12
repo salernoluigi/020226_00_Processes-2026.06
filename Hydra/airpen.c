@@ -35,6 +35,8 @@ static uint32_t airpen_timeout_callback(uint32_t	val0,uint32_t	val1)
 	HAL_GPIO_WritePin(AIRPEN_PUMP_PORT, AIRPEN_PUMP_PIN, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(AIRPEN_EV3WARIA_PORT, AIRPEN_EV3WARIA_PIN, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(AIRPEN_EV_PORT, AIRPEN_EV_PIN, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(AIRPEN_PUMP24V_PORT, AIRPEN_PUMP24V_PIN, GPIO_PIN_RESET);
+
 	HYDRA_Struct.global_timer_status = GLOBAL_TIMER_STOP;
 	task_delay(50);
 	send_numeric_dwin_packet(&Uart3_LCD_Drv,0x0682,AIRPEN_VP,0);

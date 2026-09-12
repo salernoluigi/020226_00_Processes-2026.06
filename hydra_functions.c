@@ -275,9 +275,7 @@ __weak	uint32_t	callback_vp_vortex_vacuum(uint16_t	data0_val,uint16_t	data1_val)
 }
 __weak	uint32_t	callback_vp_vortex_speed(uint16_t	data0_val,uint16_t	data1_val)
 {
-	if ( HYDRA_Struct.current_page == PAGE_VORTEX)
-		return vortex_set_speed(data1_val);
-	return 0;
+	return vortex_set_speed(data1_val);
 }
 __weak	uint32_t	callback_vp_au_page_switch(uint16_t	data0_val,uint16_t	data1_val)
 {
